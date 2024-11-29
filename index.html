@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vision Board</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .upload-section {
+      margin-bottom: 20px;
+    }
+    .collage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .collage img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+    }
+    .collage img:hover {
+      border-color: #007bff;
+    }
+    .limit-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Create Your Vision Board ✨</h1>
+  <div class="upload-section">
+    <input type="file" id="upload" accept="image/*">
+    <button id="save-button">Save Collage</button>
+    <p id="limit-message" class="limit-message" style="display: none;">You can only upload up to 6 images!</p>
+  </div>
+  <div class="collage" id="collage"></div>
+
+  <script>
+    const collage = document.getElementById('collage');
+    const uploadInput = document.getElementById('upload');
+    const saveButton = document.getElementById('save-button');
+    const limitMessage = document.getElementById('limit-message');
+
+    // Load saved images from LocalStorage
+    function loadCollage() {
+      const savedImages = JSON.parse(localStorage.getItem('visionBoard')) || [];
+      savedImages.forEach(src => addImageToCollage(src));
+    }
+
+    // Add image to collage
+    function addImageToCollage(src) {
+      if (collage.children.length >= 6) {
+        limitMessage.style.display = 'block'; // Mostra il messaggio di limite
+        return;
+      }
+      limitMessage.style.display = 'none'; // Nascondi il messaggio di limite
+      const img = document.createElement('img');
+      img.src = src;
+      collage.appendChild(img);
+    }
+
+    // Handle image upload
+    uploadInput.addEventListener('change', (event) => {
+      if (collage.children.length >= 6) {
+        limitMessage.style.display = 'block'; // Mostra il messaggio di limite
+        return;
+      }
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageSrc = e.target.result;
+          addImageToCollage(imageSrc);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Save collage to LocalStorage
+    saveButton.addEventListener('click', () => {
+      const images = Array.from(collage.querySelectorAll('img')).map(img => img.src);
+      localStorage.setItem('visionBoard', JSON.stringify(images));
+      alert('Collage saved! ✨');
+    });
+
+    // Load the collage on page load
+    loadCollage();
+  </script>
+</body>
+</html>
