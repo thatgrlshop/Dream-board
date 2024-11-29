@@ -24,15 +24,43 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    .collage img {
+    .collage-item {
+      position: relative;
       width: 150px;
       height: 150px;
+    }
+    .collage img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       border: 2px solid #ddd;
       border-radius: 8px;
     }
     .collage img:hover {
       border-color: #A17E89;
+    }
+    .delete-button {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      display: none; /* Nascondi il pulsante inizialmente */
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+    }
+    .collage-item:focus-within .delete-button,
+    .collage-item img:focus + .delete-button {
+      display: flex; /* Mostra il pulsante quando l'immagine viene cliccata */
+    }
+    .delete-button:hover {
+      background-color: #A17E89;
     }
     .limit-message {
       color: #A17E89;
@@ -69,9 +97,29 @@
         return;
       }
       limitMessage.style.display = 'none'; // Nascondi il messaggio di limite
+
+      // Creazione contenitore immagine con pulsante di eliminazione
+      const collageItem = document.createElement('div');
+      collageItem.classList.add('collage-item');
+
       const img = document.createElement('img');
       img.src = src;
-      collage.appendChild(img);
+      img.tabIndex = 0; // Rendi l'immagine "focalizzabile"
+
+      const deleteButton = document.createElement('button');
+      deleteButton.classList.add('delete-button');
+      deleteButton.innerHTML = "❌";
+
+      // Aggiungi evento per eliminare immagine
+      deleteButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // Previene che il clic attivi altri eventi
+        collageItem.remove();
+        saveCollage(); // Aggiorna il LocalStorage
+      });
+
+      collageItem.appendChild(img);
+      collageItem.appendChild(deleteButton);
+      collage.appendChild(collageItem);
     }
 
     // Handle image upload
@@ -92,9 +140,13 @@
     });
 
     // Save collage to LocalStorage
-    saveButton.addEventListener('click', () => {
-      const images = Array.from(collage.querySelectorAll('img')).map(img => img.src);
+    function saveCollage() {
+      const images = Array.from(collage.querySelectorAll('.collage-item img')).map(img => img.src);
       localStorage.setItem('visionBoard', JSON.stringify(images));
+    }
+
+    saveButton.addEventListener('click', () => {
+      saveCollage();
       alert('Collage saved! ✨');
     });
 
