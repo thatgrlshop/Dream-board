@@ -43,24 +43,24 @@
       position: absolute;
       top: 5px;
       left: 5px;
-      background-color: rgba(0, 0, 0, 0.5);
+      background-color: #A17E89; /* Cambia colore a #A17E89 */
       color: white;
       border: none;
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 16px; /* Dimensione più piccola */
+      height: 16px;
       cursor: pointer;
       display: none; /* Nascondi il pulsante inizialmente */
       justify-content: center;
       align-items: center;
-      font-size: 12px;
+      font-size: 12px; /* Testo più piccolo */
+      line-height: 12px;
     }
-    .collage-item:focus-within .delete-button,
-    .collage-item img:focus + .delete-button {
-      display: flex; /* Mostra il pulsante quando l'immagine viene cliccata */
+    .collage-item:hover .delete-button {
+      display: flex; /* Mostra la X quando il mouse è sopra l'immagine */
     }
     .delete-button:hover {
-      background-color: #A17E89;
+      background-color: #A17E89; /* Mantieni lo stesso colore al passaggio del mouse */
     }
     .limit-message {
       color: #A17E89;
@@ -104,15 +104,14 @@
 
       const img = document.createElement('img');
       img.src = src;
-      img.tabIndex = 0; // Rendi l'immagine "focalizzabile"
 
       const deleteButton = document.createElement('button');
       deleteButton.classList.add('delete-button');
-      deleteButton.innerHTML = "❌";
+      deleteButton.innerHTML = "✕"; // Piccola X
 
       // Aggiungi evento per eliminare immagine
       deleteButton.addEventListener('click', (e) => {
-        e.stopPropagation(); // Previene che il clic attivi altri eventi
+        e.stopPropagation(); // Previene conflitti di eventi
         collageItem.remove();
         saveCollage(); // Aggiorna il LocalStorage
       });
