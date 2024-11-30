@@ -76,7 +76,7 @@
   <div class="upload-section">
     <input type="file" id="upload" accept="image/*">
     <button id="save-button">Save Collage</button>
-    <p id="limit-message" class="limit-message" style="display: none;">You can only upload up to 6 images!</p>
+    <p id="limit-message" class="limit-message" style="display: none;">You can only upload up to 20 images!</p>
   </div>
   <div class="collage" id="collage"></div>
 
@@ -125,7 +125,7 @@
 
     // Handle image upload
     uploadInput.addEventListener('change', (event) => {
-      if (collage.children.length >= 6) {
+      if (collage.children.length >= 20) {
         limitMessage.style.display = 'block'; // Mostra il messaggio di limite
         return;
       }
